@@ -50,6 +50,8 @@ path:        specify optional path to source files
 
 example: >convert -2c acdefgh 1 25 source
 ```
+
+Data conversion
 ```bash
 ./convert.o -1c acdefghlpr 1 100 ./murphy/learn/
 ./convert.o -1c acdefghlpr 1 500 ./murphy/test/
