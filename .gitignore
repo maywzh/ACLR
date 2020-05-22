@@ -481,3 +481,10 @@ bh_unicode_properties.cache
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
 
+
+# Custom
+
+data/murphy/learn
+data/murphy/test
+data/murphy
+data/character.tar

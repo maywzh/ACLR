@@ -24,6 +24,35 @@ where CLASS is an integer number indicating the class as described below, OBJNUM
 - **DIAG**: this is the length of the diagonal of the smallest rectangle which includes the picture of the character. The value of this attribute is the same in each object. Its C language type is float.
 
 
-### Sample
+### Get started
+
+```bash
+cd data && uncompress character.tar.Z && tar xvf character.tar && cd murphy && unzip "*.zip" # extract data
+clang++ -std=c++1z *.cpp -o convert.o # Compile convert program
+```
+This is the usage of ``convert.o``
+```sh
+./convert
+Usage:  convert [-output] [acdefghlpr] x1 x2 [path]
+
+output:
+        -1      output *pattern & *target in one file
+        -2      output *pattern & *target in two files
+        -c      represent as 12x8 array
+        -d      represent as 6 4x4 arrays
+
+acdefghlpr:  specify characters to convert
+
+x1 x2:       specify range to convert, x1 < x2, and 1 to 500
+
+path:        specify optional path to source files
+
+
+example: >convert -2c acdefgh 1 25 source
+```
+```bash
+./convert.o -1c acdefghlpr 1 100 ./murphy/learn/
+./convert.o -1c acdefghlpr 1 500 ./murphy/test/
+```
 
 

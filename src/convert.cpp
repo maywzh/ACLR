@@ -127,13 +127,20 @@ using namespace std;
 // missing prototype from gcc headers
 char *strlwr(char *);
 
-enum { ONEARRAY, SIXARRAY, ONEFILE, TWOFILE };
+enum
+{
+  ONEARRAY,
+  SIXARRAY,
+  ONEFILE,
+  TWOFILE
+};
 
 #define LINELENGTH 50
 
 // input a float, return an int myrounded up if > xx.5 , myrounded
 // down if <= xx.5
-int myround(float num) {
+int myround(float num)
+{
   int stub = (int)floor(num);
   float rem = num - stub;
   if (rem > .5)
@@ -143,7 +150,8 @@ int myround(float num) {
 
 // convert class, to convert a character reprensented as line segments
 // to a 12x8 pixel array, the character is sized to fill the grid if needed
-class Convert {
+class Convert
+{
 
 public:
   Convert(char *, int, int, int, int, const char *);
@@ -165,7 +173,8 @@ private:
 };
 
 // destructor
-Convert::~Convert(void) {
+Convert::~Convert(void)
+{
   if (inputFile)
     delete (inputFile);
 }
@@ -174,7 +183,8 @@ Convert::~Convert(void) {
 // representation type
 
 Convert::Convert(char *characters, int rlow, int rhigh, int arrayType,
-                 int fileType, const char *path) {
+                 int fileType, const char *path)
+{
   fstream pat, tar;
   low = rlow;
   high = rhigh;
@@ -187,26 +197,32 @@ Convert::Convert(char *characters, int rlow, int rhigh, int arrayType,
   int numCount;
 
   // figure out the path if the source files are in a different dir
-  if (path) {
+  if (path)
+  {
     strcpy(inputFile, path);
     int len = strlen(inputFile);
     inputPtr = inputFile + len;
-  } else
+  }
+  else
     inputPtr = inputFile;
 
   // open the output streams
   pat.open("pattern", ios::out);
   pattern = &pat;
-  if (ftype == TWOFILE) {
+  if (ftype == TWOFILE)
+  {
     tar.open("target", ios::out);
     target = &tar;
-  } else
+  }
+  else
     target = &pat;
 
-  for (numCount = low; numCount <= high; numCount++) {
+  for (numCount = low; numCount <= high; numCount++)
+  {
 
     charCount = 0;
-    while (characters[charCount]) {
+    while (characters[charCount])
+    {
       // build input file name
       inputPtr[0] = currentChar = characters[charCount++];
       inputPtr[1] = 0;
@@ -215,7 +231,8 @@ Convert::Convert(char *characters, int rlow, int rhigh, int arrayType,
 
       source.open(inputFile, ios::in);
 
-      if (source.fail()) {
+      if (source.fail())
+      {
         cerr << "Error opening " << inputFile << '\n';
         exit(1);
       }
@@ -232,9 +249,12 @@ Convert::Convert(char *characters, int rlow, int rhigh, int arrayType,
 
 // output target file
 // To one-hot encoding
-void Convert::targetOutput(void) {
-  if (target->good()) {
-    switch (currentChar) {
+void Convert::targetOutput(void)
+{
+  if (target->good())
+  {
+    switch (currentChar)
+    {
     case 'a':
       *target << "1 0 0 0 0 0 0 0 0 0" << endl;
       break;
@@ -270,40 +290,51 @@ void Convert::targetOutput(void) {
 }
 
 // output grid to pattern & target files
-void Convert::output(void) {
-  if (pattern->good()) {
+void Convert::output(void)
+{
+  if (pattern->good())
+  {
     int k, l;
 
     // output as one big picture line by line
-    if (otype == ONEARRAY) {
-      for (k = 11; k >= 0; k--) {
+    if (otype == ONEARRAY)
+    {
+      for (k = 11; k >= 0; k--)
+      {
         for (l = 0; l < 8; l++)
           *pattern << grid[k][l] << ' ';
       }
     }
     // output as 6 quadrants each quadrant line by line
-    else {
-      for (k = 11; k >= 8; k--) {
+    else
+    {
+      for (k = 11; k >= 8; k--)
+      {
         for (l = 0; l < 4; l++)
           *pattern << grid[k][l] << ' ';
       }
-      for (k = 11; k >= 8; k--) {
+      for (k = 11; k >= 8; k--)
+      {
         for (l = 4; l < 8; l++)
           *pattern << grid[k][l] << ' ';
       }
-      for (k = 7; k >= 4; k--) {
+      for (k = 7; k >= 4; k--)
+      {
         for (l = 0; l < 4; l++)
           *pattern << grid[k][l] << ' ';
       }
-      for (k = 7; k >= 4; k--) {
+      for (k = 7; k >= 4; k--)
+      {
         for (l = 4; l < 8; l++)
           *pattern << grid[k][l] << ' ';
       }
-      for (k = 3; k >= 0; k--) {
+      for (k = 3; k >= 0; k--)
+      {
         for (l = 0; l < 4; l++)
           *pattern << grid[k][l] << ' ';
       }
-      for (k = 3; k >= 0; k--) {
+      for (k = 3; k >= 0; k--)
+      {
         for (l = 4; l < 8; l++)
           *pattern << grid[k][l] << ' ';
       }
@@ -319,7 +350,8 @@ void Convert::output(void) {
 }
 
 // reads one line at a time and calls fillgrid to store *pattern
-void Convert::scanSource(void) {
+void Convert::scanSource(void)
+{
 #ifndef NODEBUG
   cout << inputFile << endl;
 #endif
@@ -329,7 +361,8 @@ void Convert::scanSource(void) {
     for (int j = 0; j < 8; j++)
       grid[i][j] = 0;
 
-  while (!source.eof()) {
+  while (!source.eof())
+  {
     source.getline(line, LINELENGTH);
 
 #ifndef NODEBUG
@@ -345,7 +378,8 @@ void Convert::scanSource(void) {
 // for debug output
 #ifndef NODEBUG
 
-  for (int k = 11; k >= 0; k--) {
+  for (int k = 11; k >= 0; k--)
+  {
     for (int l = 0; l < 8; l++)
       cout << grid[k][l] << ' ';
     cout << endl;
@@ -353,7 +387,8 @@ void Convert::scanSource(void) {
 #endif
 }
 
-void Convert::fillGrid(const char *line) {
+void Convert::fillGrid(const char *line)
+{
   int xy[4];
   int count;
   float size, val, slope, xflt, yflt;
@@ -363,7 +398,8 @@ void Convert::fillGrid(const char *line) {
   token = strtok(token, " ");
 
   // retrieve the x & y values & the size value
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
+  {
     token = strtok(NULL, " ");
     xy[i] = atoi(token);
   }
@@ -374,7 +410,8 @@ void Convert::fillGrid(const char *line) {
 
   // adjust the x & y coords to fit into a 12x8 grid
 
-  for (int j = 0; j < 4; j++) {
+  for (int j = 0; j < 4; j++)
+  {
     xy[j] = (int)(xy[j] / val);
     if ((xy[j] > 11) && ((j == 1) || (j == 3)))
       xy[j] = 11;
@@ -403,30 +440,37 @@ void Convert::fillGrid(const char *line) {
   if ((slope > 1) || (slope < -1)) // index off of y axis
   {
     xflt = xy[0];
-    if (slope > 1) {
-      for (count = xy[1]; count <= xy[3]; count++) {
+    if (slope > 1)
+    {
+      for (count = xy[1]; count <= xy[3]; count++)
+      {
         grid[count][myround(xflt)] = 1;
         xflt += 1 / slope;
       }
-    } else // negative slope
+    }
+    else // negative slope
     {
-      for (count = xy[1]; count >= xy[3]; count--) {
+      for (count = xy[1]; count >= xy[3]; count--)
+      {
         grid[count][myround(xflt)] = 1;
         xflt -= 1 / slope;
       }
     }
-  } else // index off of x axis
+  }
+  else // index off of x axis
   {
     yflt = xy[1];
 
-    for (count = xy[0]; count <= xy[2]; count++) {
+    for (count = xy[0]; count <= xy[2]; count++)
+    {
       grid[myround(yflt)][count] = 1;
       yflt += slope;
     }
   }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   int atype = ONEARRAY;
   int ftype = TWOFILE;
   int low = 1;
@@ -434,7 +478,8 @@ int main(int argc, char *argv[]) {
   char chars[] = "acdefghlpr";
   char *thepath = 0;
 
-  if (argc < 5) {
+  if (argc < 5)
+  {
     cerr << "Usage:  convert [-output] [acdefghlpr] x1 x2 [path]" << endl
          << endl;
     cerr << "output:" << endl;
@@ -451,7 +496,8 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  else {
+  else
+  {
 
     if (strchr(argv[1], 'd'))
       atype = SIXARRAY;
@@ -461,7 +507,8 @@ int main(int argc, char *argv[]) {
     //	strlwr(chars);               /****this function missing in gcc ******/
     low = atoi(argv[3]);
     high = atoi(argv[4]);
-    if (!low || !high || (low > high)) {
+    if (!low || !high || (low > high))
+    {
       cerr << "ERROR: incorrect values for x1 or x2" << endl;
       exit(1);
     }
