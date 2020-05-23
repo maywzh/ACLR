@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.linear_model import SGDClassifier
 import seaborn as sns
 from sklearn import svm
 import matplotlib.pyplot as plt
@@ -36,13 +36,7 @@ x_test, y_test = readData("../data/pattern-learn")
 train_num = 5000
 test_num = 1000
 
-model = GradientBoostingClassifier(max_features=90,
-                                   max_depth=40,
-                                   min_samples_split=8,
-                                   min_samples_leaf=3,
-                                   n_estimators=1200,
-                                   learning_rate=0.05,
-                                   subsample=0.95)
+model = SGDClassifier(loss='log', penalty='l2', max_iter=100)
 scores_clf_svc_cv = cross_val_score(model, x_train, y_train, cv=5)
 print(scores_clf_svc_cv)
 print("Accuracy: %0.2f (+/- %0.2f)" %
