@@ -4,6 +4,7 @@ import seaborn as sns
 from sklearn import svm
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
+from sklearn.multiclass import OneVsRestClassifier
 
 
 def readData(filename) -> (np.array, np.array):
@@ -36,19 +37,19 @@ x_test, y_test = readData("../data/pattern-learn")
 train_num = 5000
 test_num = 1000
 
-model_mnb = MultinomialNB()
+model_mnb = OneVsRestClassifier(MultinomialNB())
 scores_clf_svc_cv = cross_val_score(model_mnb, x_train, y_train, cv=5)
 print(scores_clf_svc_cv)
 print("MultinomialNB Accuracy: %0.2f (+/- %0.2f)" %
       (scores_clf_svc_cv.mean(), scores_clf_svc_cv.std() * 2))
 
-model_bnb = BernoulliNB()
+model_bnb = OneVsRestClassifier(BernoulliNB())
 scores_clf_svc_cv = cross_val_score(model_bnb, x_train, y_train, cv=5)
 print(scores_clf_svc_cv)
 print("BernoulliNB Accuracy: %0.2f (+/- %0.2f)" %
       (scores_clf_svc_cv.mean(), scores_clf_svc_cv.std() * 2))
 
-model_catenb = CategoricalNB()
+model_catenb = OneVsRestClassifier(CategoricalNB())
 scores_clf_svc_cv = cross_val_score(model_catenb, x_train, y_train, cv=5)
 print(scores_clf_svc_cv)
 print("CategoricalNB Accuracy: %0.2f (+/- %0.2f)" %

@@ -4,6 +4,12 @@ import seaborn as sns
 from sklearn import svm
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import jaccard_similarity_score, cohen_kappa_score, hamming_loss
+from sklearn.multiclass import OneVsRestClassifier
+#海明距离也适用于多分类的问题，简单来说就是衡量预测标签与真实标签之间的距离，取值在0~1之间。距离为0说明预测结果与真实结果完全相同，距离为1就说明模型与我们想要的结果完全就是背道而驰。
+#kappa系数是用在统计学中评估一致性的一种方法，取值范围是[-1,1]，实际应用中，一般是[0,1]，与ROC曲线中一般不会出现下凸形曲线的原理类似。这个系数的值越高，则代表模型实现的分类准确度越高。
+#它与海明距离的不同之处在于分母。当预测结果与实际情况完全相符时，系数为1；当预测结果与实际情况完全不符时，系数为0；当预测结果是实际情况的真子集或真超集时，距离介于0到1之间。我们可以通过对所有样本的预测情况求平均得到算法在测试集上的总体表现情况。
+#铰链损失（Hinge loss）一般用来使“边缘最大化”（maximal margin）。损失取值在0~1之间，当取值为0，表示多分类模型分类完全准确，取值为1表明完全不起作用。
 
 
 def readData(filename) -> (np.array, np.array):
@@ -45,4 +51,5 @@ print("Accuracy: %0.2f (+/- %0.2f)" %
 model.fit(x_train, y_train)
 
 precition = model.score(x_test, y_test)
+
 print('precition is : ', precition * 100, "%")

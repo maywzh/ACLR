@@ -1,9 +1,9 @@
 import numpy as np
-from sklearn.ensemble import GradientBoostingClassifier
 import seaborn as sns
 from sklearn import svm
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import classification_report
 
 
 def readData(filename) -> (np.array, np.array):
@@ -52,4 +52,7 @@ print('precition is : ', precition * 100, "%")
 
 #获取模型返回值
 n_Support_vector = model.n_support_  #支持向量个数
-print("支持向量个数为： ", n_Support_vector)
+print("The number of support vectors is： ", n_Support_vector)
+
+y_pred = model.predict(x_test)
+print(classification_report(y_test, y_pred))

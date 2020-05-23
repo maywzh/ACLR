@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import seaborn as sns
 
-files = os.listdir('learn/')
+files = os.listdir('../data/murphy/learn/')
 cnt = 2
 data = []
 for file in files:
-    with open('learn/' + file, 'r') as fi:  #from path read file
+    with open(file, 'r') as fi:  #from path read file
         for line in fi:
             seg = line.strip().split()  #split the line by blank
             tmp = []
