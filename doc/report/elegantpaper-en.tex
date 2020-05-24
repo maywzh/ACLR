@@ -214,7 +214,18 @@ I applied elimination strategy to the model, that is, minimizing the weight of p
 \section{Evaluation}
 The dataset is divided into training and testing sets, train:test = 7:3.
 
-We applied cross validation and multi-class micro and macro recall/recision/f1-score analysis:
+The traditional F-measure or balanced F-score (F1 score) is the harmonic mean of precision and recall.
+The number of positive sample is $P$, The number of negative sample is $N$
+
+The recognition rate $Acc=\frac{TP+TN}{TP+TN+FP+FN}=\frac{TP+TN}{P+N}$
+
+$\text{Recall}=\frac{TP}{TP+FN}=\frac{TP}{P}$
+
+$\text{Precision}=\frac{TP}{TP+FP}$
+
+$F_1=\frac{2 T P}{2 T P+F N+F P}=\frac{2 \cdot \text { Precision } \cdot \text { Recall}}{\text {Precision }+\text { Recall}}$
+
+Recall reflects the classification model H's ability to identify positive samples. The higher the recall, the stronger the model's ability to identify positive samples. Precision reflects the model's ability to distinguish negative samples. The higher the precision, the better the model's discrimination of negative samples. The stronger the ability. F1-score is a combination of the two. The higher the F1-score, the more robust the classification model. 
 
 \subsection*{Logistic Regression Classifier}
 \begin{figure}[H]
@@ -290,7 +301,7 @@ We applied cross validation and multi-class micro and macro recall/recision/f1-s
 \end{figure}
 
 \subsection{Analysis}
-Generally, The SVM and Hard voting Ensembling classifier have the best performance. Hard voting classifier perform better when precision/recall bias of each label is taken into concern. The Soft voting classifier, MLP and Random Forest also have ideal performance. The SGD, LR and Decision tree model is too simplified to perform well in this task.
+Generally, The SVM and Hard voting Ensembling classifier have the best performance. Hard voting classifier perform better when precision/recall bias of each label is taken into concern. The Soft voting classifier, MLP and Random Forest also have ideal performance. The SGD, LR and Decision tree model is too simplified to perform well in this task. 
 
 \section{Conclusion}
 We showed the Ensembling can improve the performance of the classifiers, with which the classification can resist the disturbance of some noise. The voting ensembling is a kind of bagging, which mean that we can perform parallel learning in FPGA or GPU to accelerate the computing.
