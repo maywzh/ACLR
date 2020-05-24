@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import label_binarize
+
+label_names = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'L', 'P', 'R']
 
 
 def readData(filename) -> (np.array, np.array):
@@ -19,5 +22,10 @@ def readData(filename) -> (np.array, np.array):
     return np.array(features), np.array(labels)
 
 
-if __name__ == "__main__":
-    f, l = readData("../data/pattern-learn")
+x_train_r, y_train_r = readData("../data/pattern-test")
+x_test_r, y_test_r = readData("../data/pattern-learn")
+
+x_total = np.concatenate((x_train_r, x_test_r))
+y_total = np.concatenate((y_train_r, y_test_r))
+
+y_bin = label_binarize(y_total, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])

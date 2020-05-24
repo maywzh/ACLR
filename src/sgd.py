@@ -36,7 +36,7 @@ x_test, y_test = readData("../data/pattern-learn")
 train_num = 5000
 test_num = 1000
 
-model = SGDClassifier(loss='log', penalty='l2', max_iter=100)
+model = SGDClassifier(loss='hinge', penalty='l2', max_iter=1000, n_jobs=-1)
 scores_clf_svc_cv = cross_val_score(model, x_train, y_train, cv=5)
 print(scores_clf_svc_cv)
 print("Accuracy: %0.2f (+/- %0.2f)" %
