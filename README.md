@@ -1,7 +1,7 @@
 # ACLR
 The Artificial Characters Learning Problem Solution can be found on [UCI website](https://archive.ics.uci.edu/ml/datasets/Artificial+Characters).
 
-## Dataet Info
+## Dataset Info
 
 ### Data Set Information:
 
