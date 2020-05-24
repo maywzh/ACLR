@@ -46,7 +46,12 @@ x_train, x_test, y_train, y_test = train_test_split(x_total,
                                                     test_size=.3,
                                                     random_state=0)
 
-lr_clf = LogisticRegression(random_state=1, max_iter=1000)
+lr_clf = LogisticRegression(random_state=1,
+                            max_iter=1000,
+                            multi_class="multinomial",
+                            solver='saga',
+                            penalty='l1',
+                            n_jobs=-1)
 rf_clf = RandomForestClassifier(oob_score=True,
                                 n_estimators=100,
                                 max_features=10,
@@ -54,8 +59,9 @@ rf_clf = RandomForestClassifier(oob_score=True,
 ext_clf = ExtraTreesClassifier(n_estimators=10,
                                max_depth=None,
                                min_samples_split=2,
-                               random_state=0)
-sgd_clf = SGDClassifier(loss='log', penalty='l2', max_iter=100)
+                               random_state=0,
+                               n_jobs=-1)
+sgd_clf = SGDClassifier(loss='log', penalty='l2', max_iter=1000, n_jobs=-1)
 svm_clf = SVC(C=4.5,
               gamma=0.06,
               cache_size=200,
@@ -79,7 +85,8 @@ heclf = VotingClassifier(estimators=[('lr', lr_clf), ('rf', rf_clf),
                                      ('ext', ext_clf), ('sgd', sgd_clf),
                                      ('svm', svm_clf), ('dt', dt_clf),
                                      ('mlp', mlp_clf)],
-                         voting='hard')
+                         voting='hard',
+                         n_jobs=-1)
 
 seclf = VotingClassifier(estimators=[('lr', lr_clf), ('rf', rf_clf),
                                      ('ext', ext_clf), ('sgd', sgd_clf),
@@ -87,7 +94,8 @@ seclf = VotingClassifier(estimators=[('lr', lr_clf), ('rf', rf_clf),
                                      ('mlp', mlp_clf)],
                          voting='soft',
                          weights=[0.92, 0.97, 0.97, 0.95, 0.98, 0.94, 0.97],
-                         flatten_transform=True)
+                         flatten_transform=True,
+                         n_jobs=-1)
 
 for clf, clf_name in zip(
     [lr_clf, rf_clf, ext_clf, sgd_clf, svm_clf, dt_clf, mlp_clf, heclf, seclf],

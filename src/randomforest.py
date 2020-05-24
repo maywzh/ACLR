@@ -70,36 +70,4 @@ for i in range(n_classes):
     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
     roc_auc[i] = auc(fpr[i], tpr[i])
 
-
 print(fpr)
-
-# fpr = dict()
-# tpr = dict()
-# roc_auc = dict()
-# for i in range(10):
-#     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_pred[:, i])
-#     roc_auc[i] = auc(fpr[i], tpr[i])
-# plt.plot([0, 1], [0, 1], 'k--')
-# plt.xlim([-0.05, 1.0])
-# plt.ylim([0.0, 1.05])
-# plt.xlabel('False Positive Rate')
-# plt.ylabel('True Positive Rate')
-# plt.title('Receiver operating characteristic for multi-class data')
-# plt.legend(loc="lower right")
-# plt.show()
-
-# # Compute micro-average ROC curve and ROC area
-# fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_pred.ravel())
-# roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-
-# Plot of a ROC curve for a specific class
-# plt.figure()
-# plt.plot(fpr[2], tpr[2], label='ROC curve (area = %0.2f)' % roc_auc[2])
-# plt.plot([0, 1], [0, 1], 'k--')
-# plt.xlim([0.0, 1.0])
-# plt.ylim([0.0, 1.05])
-# plt.xlabel('False Positive Rate')
-# plt.ylabel('True Positive Rate')
-# plt.title('Receiver operating characteristic example')
-# plt.legend(loc="lower right")
-# plt.show()

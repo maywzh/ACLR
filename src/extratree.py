@@ -46,7 +46,7 @@ x_train, x_test, y_train, y_test = train_test_split(x_total,
                                                     test_size=.3,
                                                     random_state=0)
 
-model = ExtraTreesClassifier(n_estimators=10,
+model = ExtraTreesClassifier(n_estimators=100,
                              max_depth=None,
                              min_samples_split=2,
                              random_state=0)

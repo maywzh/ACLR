@@ -1,6 +1,6 @@
 % Full chain: pdflatex -> bibtex -> pdflatex -> pdflatex
 \documentclass[11pt,en]{elegantpaper}
-
+\usepackage{float}
 \title{Ensembling learning applied to ACLR:\\ Artificial Characters Learning Problem}
 \author{Wangzhihui Mei 2019124044 6603385}
 \institute{CCNU-UOW JI}
@@ -150,11 +150,150 @@ My parameter tuning:
 \end{itemize}
 
 
+\subsubsection{Random Forest}
+Random forest is to build a forest in a random way. There are many decision trees in the forest. There is no relationship between each decision tree in the random forest. After getting the forest, when a new input sample enters, let each decision tree in the forest make a judgment to see which category this sample should belong to, and then see which category is selected the most , Predict which category this sample is.
+
+The main focus parameter is n\_estimators. Generally, the larger the n\_estimator, the better the model performs, but n\_estimator is too large, the boundary revenue is little, i.e., the model convergence is met. We tried 10,50,100,1000, the n\_estimator setting to 100 can perform well enough and realize the balance of the performance-calculation trade-off.
+
+My parameter tuning:
+\begin{itemize}
+	\item n\_estimators: 100. The number of trees in the forest.
+	\item oob\_score: True. The score outside the bag reflects the generalization ability of a model after fitting. 
+	\item criterion: gini. The function to measure the quality of a split
+\end{itemize}
+
+\subsubsection{Extratree}
+ET or Extra-Trees (Extremely Randomized Trees) were proposed by Pierre Geurts et. al. in 2006\cite{geurts2006kernelizing}. This algorithm is very similar to the random forest algorithm, and is composed of many decision trees. But there are two main differences between this algorithm and random forest:
+
+1. The random forest uses the Bagging model, and ET uses all training samples to obtain each decision tree, that is, each decision tree applies the same all training samples;
+
+2. Random forest obtains the best bifurcation attribute in a random subset, and ET obtains the bifurcation value completely randomly, so as to bifurcate the decision tree.
+
+The tuning process is similar to Random Forest:
+\begin{itemize}
+	\item n\_estimators: 100. The number of trees in the forest.
+	\item oob\_score: True. Whether to use out-of-bag samples to estimate the generalization accuracy.
+	\item criterion: gini. The function to measure the quality of a split
+\end{itemize}
+
+\subsubsection{MLP}
+We use a 4-layer MLP as classifier, with the hidden layer of 96-node and 192-node.
+
+We applied some tricks to it: Integer multiple number of hidden layer may perform better.
+
+Parameter tuning:
+\begin{itemize}
+	\item solver='sgd', 
+    \item activation='relu',
+    \item learning\_rate\_init=.1,
+\end{itemize}
+
+\subsection{Model Ensembling}
+Ensemble modeling is a process where multiple diverse models are created to predict an outcome, either by using many different modeling algorithms or using different training data sets. The ensemble model then aggregates the prediction of each base model and results in once final prediction for the unseen data. The motivation for using ensemble models is to reduce the generalization error of the prediction. As long as the base models are diverse and independent, the prediction error of the model decreases when the ensemble approach is used. The approach seeks the wisdom of crowds in making a prediction. Even though the ensemble model has multiple base models within the model, it acts and performs as a single model. Most of the practical data mining solutions utilize ensemble modeling techniques. Chapter 4 Classification covers the approaches of different ensemble modeling techniques and their implementation in detail.
+
+In this task, I applied Voting method. Voting is a combination strategy for classification problems in integrated learning. The basic idea is to select the most output class among all machine learning algorithms.
+
+There are two types of output of classification machine learning algorithms: one is to directly output class labels, and the other is to output class probabilities. Using the former to vote is called hard voting (majority / hard voting), and using it to classify is called soft voting ( Soft voting). VotingClassifier in sklearn is the implementation of voting method.
+
+
+\subsubsection{Hard mode}
+The final result is determined by the minority obeying the majority; I applied all classifiers above to ensemble to one VotingClassifier. The structure is like Figure \ref{vcl}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{image/voting}
+	\caption{The voting classifier}
+	\label{vcl}
+\end{figure}
+
+
+\subsubsection{Soft mode}
+All the model prediction samples are the estimated value of the probability of certain categories, and the corresponding type with the highest probability is the final prediction result; This require that each model of the set can estimate the probability. We have to enable the probability output of SVM.
+
+I applied elimination strategy to the model, that is, minimizing the weight of poor performed classifier and turn up the weight of well performed classifier. Here, I use the average f1-score if classifiers as the weight vector.
+
 \section{Evaluation}
-An efficient instance selection algorithm to reconstruct training set for support vector machine\cite{liu2017efficient}
+The dataset is divided into training and testing sets, train:test = 7:3.
+
+We applied cross validation and multi-class micro and macro recall/recision/f1-score analysis:
+
+\subsection*{Logistic Regression Classifier}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/lrpf}
+	\caption{The LR performance}
+	\label{lrpf}
+\end{figure}
+
+\subsection*{SVM}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/svmpf}
+	\caption{The SVM performance}
+	\label{svmpf}
+\end{figure}
+
+\subsection*{SGD}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/sgdpf}
+	\caption{The SGD performance}
+	\label{sgdpf}
+\end{figure}
+
+\subsection*{Decision Tree}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/dtpf}
+	\caption{The Decision Tree performance}
+	\label{dtpf}
+\end{figure}
+
+\subsection*{Random Forest}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/rfpf}
+	\caption{The Random Forest performance}
+	\label{rfpf}
+\end{figure}
+
+\subsection*{Extratree}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/etpf}
+	\caption{The Extratree performance}
+	\label{etpf}
+\end{figure}
+
+
+\subsection*{MLP}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/mlppf}
+	\caption{The MLP performance}
+	\label{mlppf}
+\end{figure}
+
+\subsection*{Ensembling (Hard voting)}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/hvpf}
+	\caption{The Ensembling (Hard voting) performance}
+	\label{hvpf}
+\end{figure}
+
+\subsection*{Ensembling (Soft voting)}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{image/svpf}
+	\caption{The Ensembling (Soft voting) performance}
+	\label{svpf}
+\end{figure}
+
+\subsection{Analysis}
+Generally, The SVM and Hard voting Ensembling classifier have the best performance. Hard voting classifier perform better when precision/recall bias of each label is taken into concern. The Soft voting classifier, MLP and Random Forest also have ideal performance. The SGD, LR and Decision tree model is too simplified to perform well in this task.
 
 \section{Conclusion}
-This 
+We showed the Ensembling can improve the performance of the classifiers, with which the classification can resist the disturbance of some noise. The voting ensembling is a kind of bagging, which mean that we can perform parallel learning in FPGA or GPU to accelerate the computing.
 
 
 \bibliography{ref}
