@@ -3,7 +3,9 @@ from sklearn.ensemble import GradientBoostingClassifier
 import seaborn as sns
 from sklearn import svm
 import matplotlib.pyplot as plt
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.metrics import classification_report
+label_names = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'L', 'P', 'R']
 
 
 def readData(filename) -> (np.array, np.array):
@@ -23,18 +25,19 @@ def readData(filename) -> (np.array, np.array):
     return np.array(features), np.array(labels)
 
 
-x_train, y_train = readData("../data/pattern-test")
-x_test, y_test = readData("../data/pattern-learn")
+x_train_r, y_train_r = readData("../data/pattern-test")
+x_test_r, y_test_r = readData("../data/pattern-learn")
 
-# for i in range(np.shape(x_train)[0]):
-#     if y_train[i] == 1:
-#         plt.scatter(x_train[i][0], x_train[i][1], c='b', s=20)
-#     else:
-#         plt.scatter(x_train[i][0], x_train[i][1], c='y', s=20)
-# #plt.show()
+x_total = np.concatenate((x_train_r, x_test_r))
+y_total = np.concatenate((y_train_r, y_test_r))
 
-train_num = 5000
-test_num = 1000
+n_classes = x_total.shape[1]
+n_samples, n_features = x_total.shape
+
+x_train, x_test, y_train, y_test = train_test_split(x_total,
+                                                    y_total,
+                                                    test_size=.3,
+                                                    random_state=0)
 
 model = GradientBoostingClassifier(max_features=90,
                                    max_depth=40,
@@ -47,8 +50,9 @@ scores_clf_svc_cv = cross_val_score(model, x_train, y_train, cv=5)
 print(scores_clf_svc_cv)
 print("Accuracy: %0.2f (+/- %0.2f)" %
       (scores_clf_svc_cv.mean(), scores_clf_svc_cv.std() * 2))
+rftree = model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+y_score = model.predict_proba(x_test)
 
-model.fit(x_train, y_train)
-
-precition = model.score(x_test, y_test)
-print('precition is : ', precition * 100, "%")
+print("The classification report:\n",
+      classification_report(y_test, y_pred, target_names=label_names))
